@@ -9,7 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(tidycensus)
-census_api_key("9f9584127dd506cdaf80bdb78927e9c01c12f2b8", install = TRUE, overwrite = TRUE)
+census_api_key("bc6535753047a343a531d92be52cfa8b40d17182", install = TRUE, overwrite = TRUE)
+readRenviron("~/.Renviron")
 ```
 
 ```{r, include=FALSE}
@@ -17,24 +18,24 @@ racevars <- c(White = "B02001_002",
               Black = "B02001_003", 
               Asian = "B02001_005",
               Hispanic = "B03003_003")
-pima <- get_acs(geography = "tract",
+maricopa <- get_acs(geography = "tract",
                   variables = racevars, 
                   year = 2018,
                   state = "AZ",
-                  county = "Pima County",
+                  county = "Maricopa County",
                   geometry = TRUE,
                   summary_var = "B02001_001")
 ```
 
 ```{r, echo=FALSE, message=FALSE}
-pima %>%
+maricopa %>%
   mutate(Percent = 100 * (estimate / summary_est)) %>%
   ggplot(aes(fill = Percent, color = Percent)) +
   facet_wrap(~ variable) +
   geom_sf() +
   scale_fill_viridis_c(direction = -1) +
   scale_color_viridis_c(direction = -1) +
-  labs(title = "Racial geography of Pima County, Arizona",
+  labs(title = "Racial geography of Maricopa County, Arizona",
        caption = "Source: American Community Survey 2014-2018") +
   theme_void()
 ```
